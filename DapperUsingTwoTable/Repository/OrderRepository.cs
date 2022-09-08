@@ -68,8 +68,8 @@ namespace DapperUsingTwoTable.Repository
                     int result = await connection.QuerySingleAsync<int>(query, order);
                     if (result != 0)
                     {
-                        ret = await InsertUpdateOrder(odlist, result);                        
-                        result = await connection.ExecuteAsync("update TOrder set totalOrderAmount=@totalOrderAmount", new { totalOrderAmount =ret});
+                        ret = await InsertUpdateOrder(odlist, result);
+                        result = await connection.ExecuteAsync("update TOrder set totalOrderAmount=@totalOrderAmount where orderId=@result ", new { totalOrderAmount = ret, result= result });
 
                     }
 
@@ -83,7 +83,7 @@ namespace DapperUsingTwoTable.Repository
 
         public async Task<double> InsertUpdateOrder(List<OrderDetails> odlist, int result)
         {
-            
+
             double grandtotal = 0;
             if (result != 0)
             {
@@ -101,7 +101,7 @@ namespace DapperUsingTwoTable.Repository
 
                         var result1 = await connection.ExecuteAsync(qry, od);
 
-                        
+
                         grandtotal = grandtotal + od.totalAmount;
                     }
                 }
